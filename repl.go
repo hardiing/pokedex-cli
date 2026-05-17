@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -12,6 +11,5 @@ func cleanInput(text string) []string {
 		lowerStr := strings.ToLower(word)
 		s = append(s, lowerStr)
 	}
-	fmt.Printf("%q\n", s)
 	return s
 }
