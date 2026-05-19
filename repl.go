@@ -12,12 +12,12 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*Config) error
 }
 
-type config struct {
-	Previous string
-	Next     string
+type Config struct {
+	Previous *string
+	Next     *string
 }
 
 func cleanInput(text string) []string {
@@ -32,6 +32,8 @@ func cleanInput(text string) []string {
 
 func startRepl() {
 	var supportedCommands map[string]cliCommand
+
+	cfg := &Config{}
 
 	commandHelp := func() error {
 		fmt.Println("Welcome to the Pokedex!")
@@ -53,18 +55,23 @@ func startRepl() {
 			"exit": {
 				name:        "exit",
 				description: "Exit the Pokedex",
-				callback:    commandExit,
+				callback:    commandExit(cfg),
 			},
 			"help": {
 				name:        "help",
 				description: "Displays a help message",
-				callback:    commandHelp,
+				callback:    commandHelp(cfg),
 			},
 			"map": {
 				name:        "map",
 				description: "Display map areas",
-				callback:    pokeapi.GetLocationAreas,
+				callback:    pokeapi.GetLocationAreas(cfg.Next),
 			},
+			/* "mapb": {
+				name: "mapb",
+				description: "Go back one page",
+				callback: pokeapi.GetLocationAreas,
+			}, */
 		}
 		c, ok := supportedCommands[r[0]]
 		if ok {

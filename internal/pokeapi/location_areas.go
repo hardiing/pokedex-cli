@@ -21,7 +21,11 @@ type LocationAreasResponse struct {
 }
 
 func GetLocationAreas(url string) (LocationAreasResponse, error) {
-	res, err := http.Get("https://pokeapi.co/api/v2/location-area/")
+	fullURL := "https://pokeapi.co/api/v2/location-area/"
+	if url != "" {
+		fullURL = url
+	}
+	res, err := http.Get(fullURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,5 +49,7 @@ func GetLocationAreas(url string) (LocationAreasResponse, error) {
 		fmt.Printf("%s\n", area.Name)
 	}
 
-	return areas, nil
+	config.Next = res.Next
+
+	return areas, err
 }
