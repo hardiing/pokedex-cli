@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/hardiing/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -61,7 +63,7 @@ func startRepl() {
 			"map": {
 				name:        "map",
 				description: "Display map areas",
-				callback:    GetLocationAreas,
+				callback:    pokeapi.GetLocationAreas,
 			},
 		}
 		c, ok := supportedCommands[r[0]]

@@ -1,6 +1,7 @@
-package internal
+package pokeapi
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -11,7 +12,7 @@ type LocationName struct {
 	Name string
 }
 
-func GetLocationAreas() {
+func GetLocationAreas() error {
 	res, err := http.Get("https://pokeapi.co/api/v2/location-area/")
 	if err != nil {
 		log.Fatal(err)
@@ -25,5 +26,16 @@ func GetLocationAreas() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%s", body)
+
+	jsonData := body
+	var areas []LocationName
+	if err := json.Unmarshal(jsonData, &areas); err != nil {
+		log.Fatalf("Error unmarshalling JSON: %v", err)
+	}
+
+	for _, area := range areas {
+		fmt.Printf("%s", area.Name)
+	}
+
+	return nil
 }
