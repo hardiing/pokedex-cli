@@ -13,6 +13,11 @@ type cliCommand struct {
 	callback    func() error
 }
 
+type config struct {
+	Previous string
+	Next     string
+}
+
 func cleanInput(text string) []string {
 	s := []string{}
 	trimmedString := strings.Fields(text)
@@ -52,6 +57,11 @@ func startRepl() {
 				name:        "help",
 				description: "Displays a help message",
 				callback:    commandHelp,
+			},
+			"map": {
+				name:        "map",
+				description: "Display map areas",
+				callback:    GetLocationAreas,
 			},
 		}
 		c, ok := supportedCommands[r[0]]
