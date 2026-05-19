@@ -10,9 +10,17 @@ import (
 
 type LocationName struct {
 	Name string
+	URL  string
 }
 
-func GetLocationAreas() error {
+type LocationAreasResponse struct {
+	Count    int            `json:"count"`
+	Next     *string        `json:"next"`
+	Previous *string        `json:"previous"`
+	Results  []LocationName `json:"results"`
+}
+
+func GetLocationAreas(url string) (LocationAreasResponse, error) {
 	res, err := http.Get("https://pokeapi.co/api/v2/location-area/")
 	if err != nil {
 		log.Fatal(err)
@@ -28,14 +36,14 @@ func GetLocationAreas() error {
 	}
 
 	jsonData := body
-	var areas []LocationName
+	var areas LocationAreasResponse
 	if err := json.Unmarshal(jsonData, &areas); err != nil {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
 
-	for _, area := range areas {
-		fmt.Printf("%s", area.Name)
+	for _, area := range areas.Results {
+		fmt.Printf("%s\n", area.Name)
 	}
 
-	return nil
+	return areas, nil
 }
