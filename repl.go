@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/hardiing/pokedexcli/internal/pokeapi"
+	//"github.com/hardiing/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -35,7 +34,7 @@ func startRepl() {
 
 	cfg := &Config{}
 
-	commandHelp := func() error {
+	commandHelp := func(cfg *Config) error {
 		fmt.Println("Welcome to the Pokedex!")
 		fmt.Println("Usage:")
 		fmt.Println("")
@@ -55,36 +54,30 @@ func startRepl() {
 			"exit": {
 				name:        "exit",
 				description: "Exit the Pokedex",
-				callback:    commandExit(cfg),
+				callback:    commandExit,
 			},
 			"help": {
 				name:        "help",
 				description: "Displays a help message",
-				callback:    commandHelp(cfg),
+				callback:    commandHelp,
 			},
 			"map": {
 				name:        "map",
-				description: "Display map areas",
-				callback:    pokeapi.GetLocationAreas(cfg.Next),
+				description: "Display the next 20 location areas",
+				callback:    commandMap,
 			},
-			/* "mapb": {
-				name: "mapb",
+			"mapb": {
+				name:        "mapb",
 				description: "Go back one page",
-				callback: pokeapi.GetLocationAreas,
-			}, */
+				callback:    commandMapb,
+			},
 		}
 		c, ok := supportedCommands[r[0]]
 		if ok {
-			c.callback()
+			c.callback(cfg)
 		} else {
 			fmt.Println("Unknown command")
 		}
 
 	}
-}
-
-func commandExit() error {
-	fmt.Println("Closing the Pokedex... Goodbye!")
-	os.Exit(0)
-	return nil
 }

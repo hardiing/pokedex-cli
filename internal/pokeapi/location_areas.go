@@ -49,7 +49,7 @@ func GetLocationAreas(url string) (LocationAreasResponse, error) {
 		fmt.Printf("%s\n", area.Name)
 	}
 
-	config.Next = res.Next
+	//config.Next = res.Next
 
 	return areas, err
 }
