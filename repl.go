@@ -75,6 +75,11 @@ func startRepl() {
 				description: "Go back one page",
 				callback:    commandMapb,
 			},
+			/* "explore": {
+				name: "explore",
+				description: "Explore an area by name",
+				callback: commandExplore, // add string parameter
+			}, */
 		}
 		c, ok := supportedCommands[r[0]]
 		if ok {
