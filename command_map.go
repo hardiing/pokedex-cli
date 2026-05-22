@@ -12,7 +12,7 @@ func commandMap(cfg *Config) error {
 		url = *cfg.Next
 	}
 
-	resp, err := pokeapi.GetLocationAreas(url)
+	resp, err := pokeapi.GetLocationAreas(url, cfg.cache)
 	if err != nil {
 		return err
 	}

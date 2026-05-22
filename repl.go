@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	//"github.com/hardiing/pokedexcli/internal/pokeapi"
+	"time"
+
+	"github.com/hardiing/pokedexcli/internal/pokecache"
 )
 
 type cliCommand struct {
@@ -17,6 +19,7 @@ type cliCommand struct {
 type Config struct {
 	Previous *string
 	Next     *string
+	cache    *pokecache.Cache
 }
 
 func cleanInput(text string) []string {
@@ -33,6 +36,7 @@ func startRepl() {
 	var supportedCommands map[string]cliCommand
 
 	cfg := &Config{}
+	cfg.cache = pokecache.NewCache(5 * time.Second)
 
 	commandHelp := func(cfg *Config) error {
 		fmt.Println("Welcome to the Pokedex!")

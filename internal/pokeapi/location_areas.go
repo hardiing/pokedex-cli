@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/hardiing/pokedexcli/internal/pokecache"
 )
 
 type LocationName struct {
@@ -20,11 +22,23 @@ type LocationAreasResponse struct {
 	Results  []LocationName `json:"results"`
 }
 
-func GetLocationAreas(url string) (LocationAreasResponse, error) {
-	fullURL := "https://pokeapi.co/api/v2/location-area/"
+func GetLocationAreas(url string, cache *pokecache.Cache) (LocationAreasResponse, error) {
+	fullURL := "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
 	if url != "" {
 		fullURL = url
 	}
+	checkCache, ok := cache.Get(fullURL)
+	if ok {
+		fmt.Println("cache used")
+		jsonData := checkCache
+		var areas LocationAreasResponse
+		if err := json.Unmarshal(jsonData, &areas); err != nil {
+			log.Fatalf("Error unmarshalling JSON: %v", err)
+		}
+
+		return areas, nil
+	}
+
 	res, err := http.Get(fullURL)
 	if err != nil {
 		log.Fatal(err)
@@ -38,18 +52,13 @@ func GetLocationAreas(url string) (LocationAreasResponse, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	cache.Add(fullURL, body)
+	fmt.Println("cache not used")
 	jsonData := body
 	var areas LocationAreasResponse
 	if err := json.Unmarshal(jsonData, &areas); err != nil {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
-
-	for _, area := range areas.Results {
-		fmt.Printf("%s\n", area.Name)
-	}
-
-	//config.Next = res.Next
 
 	return areas, err
 }
