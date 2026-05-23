@@ -6,7 +6,7 @@ import (
 	"github.com/hardiing/pokedexcli/internal/pokeapi"
 )
 
-func commandMap(cfg *Config) error {
+func commandMap(cfg *Config, args []string) error {
 	url := ""
 	if cfg.Next != nil {
 		url = *cfg.Next

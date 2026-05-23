@@ -6,19 +6,19 @@ import (
 	"github.com/hardiing/pokedexcli/internal/pokeapi"
 )
 
-func commandExplore(name string, cfg *Config) error {
-	url := ""
-	resp, err := pokeapi.GetLocationAreas(url, cfg.cache)
+func commandExplore(cfg *Config, args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("Missing parameters")
+	}
+	resp, err := pokeapi.GetArea(args[0], cfg.cache)
 	if err != nil {
 		return err
 	}
 
-	for _, area := range resp.Results {
-		if name == area.Name {
-			fmt.Printf("Exploring %s...", area.Name)
-			// explore logic
-			// print pokemon
-		}
+	fmt.Printf("Exploring %s...\n", resp.Name)
+
+	for _, pokemon := range resp.PokemonEncounters {
+		fmt.Printf("%s\n", pokemon.Pokemon.Name)
 	}
 
 	return err

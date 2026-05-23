@@ -13,7 +13,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(cfg *Config, args []string) error
 }
 
 type Config struct {
@@ -38,7 +38,7 @@ func startRepl() {
 	cfg := &Config{}
 	cfg.cache = pokecache.NewCache(5 * time.Second)
 
-	commandHelp := func(cfg *Config) error {
+	commandHelp := func(cfg *Config, args []string) error {
 		fmt.Println("Welcome to the Pokedex!")
 		fmt.Println("Usage:")
 		fmt.Println("")
@@ -54,6 +54,8 @@ func startRepl() {
 		scanner.Scan()
 		input := scanner.Text()
 		r := cleanInput((input))
+		command := r[0]
+		args := r[1:]
 		supportedCommands = map[string]cliCommand{
 			"exit": {
 				name:        "exit",
@@ -75,15 +77,15 @@ func startRepl() {
 				description: "Go back one page",
 				callback:    commandMapb,
 			},
-			/* "explore": {
-				name: "explore",
+			"explore": {
+				name:        "explore",
 				description: "Explore an area by name",
-				callback: commandExplore, // add string parameter
-			}, */
+				callback:    commandExplore,
+			},
 		}
-		c, ok := supportedCommands[r[0]]
+		c, ok := supportedCommands[command]
 		if ok {
-			c.callback(cfg)
+			c.callback(cfg, args)
 		} else {
 			fmt.Println("Unknown command")
 		}

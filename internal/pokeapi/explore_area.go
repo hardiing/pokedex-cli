@@ -10,33 +10,31 @@ import (
 	"github.com/hardiing/pokedexcli/internal/pokecache"
 )
 
-type LocationAreas struct {
+type AreaDetails struct {
+	Name              string       `json:"name"`
+	PokemonEncounters []Encounters `json:"pokemon_encounters"`
+}
+
+type Encounters struct {
+	Pokemon Pokemon `json:"pokemon"`
+}
+
+type Pokemon struct {
 	Name string `json:"name"`
-	URL  string `json:"url"`
 }
 
-type LocationAreasResponse struct {
-	Count    int             `json:"count"`
-	Next     *string         `json:"next"`
-	Previous *string         `json:"previous"`
-	Results  []LocationAreas `json:"results"`
-}
-
-func GetLocationAreas(url string, cache *pokecache.Cache) (LocationAreasResponse, error) {
-	fullURL := "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20"
-	if url != "" {
-		fullURL = url
-	}
+func GetArea(areaInput string, cache *pokecache.Cache) (AreaDetails, error) {
+	fullURL := "https://pokeapi.co/api/v2/location-area/" + areaInput
 	checkCache, ok := cache.Get(fullURL)
 	if ok {
 		fmt.Println("cache used")
 		jsonData := checkCache
-		var areas LocationAreasResponse
-		if err := json.Unmarshal(jsonData, &areas); err != nil {
+		var area AreaDetails
+		if err := json.Unmarshal(jsonData, &area); err != nil {
 			log.Fatalf("Error unmarshalling JSON: %v", err)
 		}
 
-		return areas, nil
+		return area, nil
 	}
 
 	res, err := http.Get(fullURL)
@@ -55,10 +53,10 @@ func GetLocationAreas(url string, cache *pokecache.Cache) (LocationAreasResponse
 	cache.Add(fullURL, body)
 	fmt.Println("cache not used")
 	jsonData := body
-	var areas LocationAreasResponse
-	if err := json.Unmarshal(jsonData, &areas); err != nil {
+	var area AreaDetails
+	if err := json.Unmarshal(jsonData, &area); err != nil {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
 
-	return areas, err
+	return area, err
 }

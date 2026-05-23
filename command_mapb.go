@@ -6,7 +6,7 @@ import (
 	"github.com/hardiing/pokedexcli/internal/pokeapi"
 )
 
-func commandMapb(cfg *Config) error {
+func commandMapb(cfg *Config, args []string) error {
 	url := ""
 	if cfg.Previous != nil {
 		url = *cfg.Previous
