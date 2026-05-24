@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hardiing/pokedexcli/internal/pokeapi"
 	"github.com/hardiing/pokedexcli/internal/pokecache"
 )
 
@@ -20,6 +21,7 @@ type Config struct {
 	Previous *string
 	Next     *string
 	cache    *pokecache.Cache
+	pokedex  map[string]pokeapi.PokemonDetails
 }
 
 func cleanInput(text string) []string {
@@ -37,6 +39,7 @@ func startRepl() {
 
 	cfg := &Config{}
 	cfg.cache = pokecache.NewCache(5 * time.Second)
+	cfg.pokedex = make(map[string]pokeapi.PokemonDetails)
 
 	commandHelp := func(cfg *Config, args []string) error {
 		fmt.Println("Welcome to the Pokedex!")
@@ -81,6 +84,11 @@ func startRepl() {
 				name:        "explore",
 				description: "Explore an area by name",
 				callback:    commandExplore,
+			},
+			"catch": {
+				name:        "catch",
+				description: "attempt to catch a pokemon",
+				callback:    commandCatch,
 			},
 		}
 		c, ok := supportedCommands[command]
