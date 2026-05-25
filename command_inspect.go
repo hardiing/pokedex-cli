@@ -22,6 +22,8 @@ func commandInspect(cfg *Config, args []string) error {
 		for _, pokemonType := range exists.Types {
 			fmt.Printf("\t-%s\n", pokemonType.PokemonType.Name)
 		}
+	} else {
+		fmt.Println("you have not caught that pokemon")
 	}
 	return nil
 }
