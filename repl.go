@@ -90,6 +90,11 @@ func startRepl() {
 				description: "attempt to catch a pokemon",
 				callback:    commandCatch,
 			},
+			"inspect": {
+				name:        "inspect",
+				description: "inspect a pokemon in your pokedex",
+				callback:    commandInspect,
+			},
 		}
 		c, ok := supportedCommands[command]
 		if ok {
