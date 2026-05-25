@@ -87,13 +87,18 @@ func startRepl() {
 			},
 			"catch": {
 				name:        "catch",
-				description: "attempt to catch a pokemon",
+				description: "Attempt to catch a pokemon",
 				callback:    commandCatch,
 			},
 			"inspect": {
 				name:        "inspect",
-				description: "inspect a pokemon in your pokedex",
+				description: "Inspect a pokemon in your pokedex",
 				callback:    commandInspect,
+			},
+			"pokedex": {
+				name:        "pokedex",
+				description: "View your Pokedex",
+				callback:    commandPokedex,
 			},
 		}
 		c, ok := supportedCommands[command]
